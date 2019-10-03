@@ -24,7 +24,7 @@ After installing Anaconda, you have to create a Python 3.7 environment with the 
 
 ### Running the neuromuscular model notebook
 - Use the command `jupyter notebook` to start the Jupyter notebook application.
-- In Jupyter notebook, open the file 'NeuromuscularModel.ipynb'.
+- In Jupyter notebook, open the file 'neuromuscular_note.ipynb'.
 - It is highly recommended to execute each cell in the order of appearance, since there are dependences between the cells.
 
 ## References
