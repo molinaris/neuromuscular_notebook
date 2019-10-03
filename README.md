@@ -2,7 +2,7 @@
 # NEUROMUSCULAR MODEL NOTEBOOK
 The neuromuscular model notebook is an interactive tool for studying the underlying mechanisms of electromyogram (EMG) and force generation. The model, which was based on previous studies (see references below), can be used for research purposes as well as a teaching platform.
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/molinaris/nerlab.git/master)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/molinaris/neuromuscular_notebook/master)
 
 The notebook was created by [Ricardo G. Molinari](https://github.com/molinaris) under the supervision of [Dr. Leonardo A. Elias](https://github.com/leoelias-unicamp) at the [Neural Engineering Research Laboratory](http://www.fee.unicamp.br/deb/leoelias/ner-lab?language=en), [University of Campinas](http://www.unicamp.br/unicamp/english) (Brazil).
 
