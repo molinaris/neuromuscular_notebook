@@ -16,7 +16,7 @@ Open this notebook with myBinder [![Binder](https://mybinder.org/badge_logo.svg)
 ### Creating the Environment
 After installing Anaconda, you have to create a Python 3.7 environment with the following packages: NumPy, Matplotlib, SciPy, Pandas, Ipywidgets, and Plotly. Use the following command in Anaconda terminal:
 
-`conda create -n nb_env python=3.7.0 numpy=1.17.0 matplotlib=3.1.1 scipy=1.1.0 pandas=0.23.4 ipywidgets=7.4.1`
+`conda create -n nemu_env python=3.7.0 numpy=1.17.0 matplotlib=3.1.1 scipy=1.1.0 pandas=0.23.4 ipywidgets=7.4.1`
 
 ### Activating the environment
 - Windows users: `activate nemu_env`
