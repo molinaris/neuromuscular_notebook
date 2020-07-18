@@ -12,7 +12,7 @@ class Phemo(object):
         self.t2b = 2 # Number of type IIb motor units
         self.n = self.t1 + self.t2a + self.t2b # Number of motor units in the pool
         self.sampling = 2e4 # Sampling Frequency [Hz]
-        self.dt = 1/2e4 # simulation step time [s]
+        self.dt = 1/self.sampling # simulation step time [s]
         self.t = np.arange(0,5e3,self.dt*1e3) # time array
         self.rr = 30 #range of recruitment
         self.pfrd = 20 #peak firing rate difference [Hz]
@@ -22,7 +22,7 @@ class Phemo(object):
         self.gain_factor= 2 # Gain factor
         self.LR = 1 # Last recruited
         self.rrc = 0.67 #Recruitment range condition [%]
-        self.ISI_limit = 15 # Minimum inter spike interval  [ms]
+        self.ISI_limit = 15 # Minimum interspike interval  [ms]
         self.recruitThreshold() #Defines Recruitment threshold for all motor units
         self.peakFireRate() #Defines peak firing rate for all motor units
         self.recruitmentRangeCondition() # Defines Maximum excitatory drive and gain for all motor units
