@@ -4,7 +4,7 @@ The neuromuscular model notebook is an interactive tool for studying the underly
 
 The notebook was created by [Ricardo G. Molinari](https://github.com/molinaris) under the supervision of [Dr. Leonardo A. Elias](https://github.com/leoelias-unicamp) at the [Neural Engineering Research Laboratory](http://www.fee.unicamp.br/deb/leoelias/ner-lab?language=en), [University of Campinas](http://www.unicamp.br/unicamp/english) (Brazil).
 
-Open this notebook with myBinder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/molinaris/neuromuscular_notebook/master?filepath=neuromuscular_note.ipynb) or sign in to your Google account to open it in Google Colab [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1UAL_mhJQ2Cln4V-3IeFLlJsmwyG0R5R1). To run the notebook in your local machine, please follow the installation instructions provided below.
+Open this notebook with myBinder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/molinaris/neuromuscular_notebook/version0.4?filepath=neuromuscular_note.ipynb) or sign in to your Google account to open it in Google Colab [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1UAL_mhJQ2Cln4V-3IeFLlJsmwyG0R5R1). To run the notebook in your local machine, please follow the installation instructions provided below.
 
 ## Installation Instructions
 ### Dependencies
