@@ -75,7 +75,8 @@ class Muscle_force (object):
         x = np.arange(0, self.Tl * 4)
         y = np.arange(self.n)
         z = np.zeros((y.shape[0],x.shape[0]))
-        plt.figure(figsize=(9, 6))
+        fig,ax = plt.subplots(3,1,figsize=(6,9))
+        plt.sca(ax[0])
         for i in range(self.n):
             z[i] = self.twitchForce(x, i)
             if i % int(self.n/5) == 0:
@@ -84,9 +85,16 @@ class Muscle_force (object):
         plt.xlabel('Time [ms]')
         plt.ylabel('Force [mN]')
         plt.legend()
-        print('Contraction time: Min = {:.2f} [ms]; Max = {:.2f}  [ms]'.format(min(self.T),
-                                                                               max(self.T)))
-        
+        plt.sca(ax[1])
+        plt.plot(y,self.fP*self.P * 1e3)
+        plt.xlabel('MU #')
+        plt.ylabel('Twitch amp. [mN]')
+        plt.sca(ax[2])
+        plt.plot(self.fP*self.P * 1e3,self.T,'.')
+        plt.xlabel('Twitch amp. [mN]')
+        plt.ylabel('Twitch dur. [ms]')
+        plt.tight_layout()
+
     # FUNCTION NAME: sat_interpol
     # FUNCTION DESCRIPTION: Interpolate with different styles between first and last 
     #                       MU force saturation frequency.
@@ -158,19 +166,20 @@ class Muscle_force (object):
         expfc = np.exp(-force*c)
         return (1-expfc)/(1+expfc)
     
-    def view_saturation(self,fsatf, lsatf,i, sat_interp):
-        self.sat_interp = sat_interp
+    #def view_saturation(self,fsatf, lsatf,i, sat_interp):
+    def view_saturation(self,fsatf, lsatf,i):
+        self.sat_interp = 'Exponential'
         self.fsatf = fsatf
         self.lsatf = lsatf
         self.sat_interpol()
         self.t = self.mnpool.t
         self.dt = self.mnpool.dt
         
-        f, axes = plt.subplots(1, 2, figsize=(14, 7))
+        f, axes = plt.subplots(1, 2, figsize=(8, 4))
         plt.sca(axes[0])
         plt.plot(np.arange(1,self.n+1),self.mu_saturation)
         plt.xlabel('MU index #')
-        plt.ylabel('Force saturation frequency [Hz]')
+        plt.ylabel('Force saturation frequency [imp/s]')
         
         freqs_demo = np.linspace(1,self.pfr[i],5)
         c_input, tet_twitch_ratio = self.find_tetanic_parameters(i, 0.20)
@@ -190,8 +199,9 @@ class Muscle_force (object):
         plt.xlabel('Time [ms]')
         plt.ylim(top = self.fP * self.P[i] *5e3)
         plt.xlim(left = 0, right = 1000)
-        plt.title("Force saturation as a function of discharge rate - MU #{}".format(i))
+        plt.title("MU #{}".format(i))
         plt.legend()
+        plt.tight_layout()
         
         spikes = np.arange(0, self.t[-1], 1e3 / self.mu_saturation[i])
         pre_force = self.gen_mu_force(spikes, 1, self.T[i])
@@ -232,11 +242,11 @@ class Muscle_force (object):
             print("Processing...")
             self.gen_muscle_force(0.4) #T*1000 [ms]
             clear_output()
-            plt.figure(figsize = (12, 6))
+            plt.figure(figsize = (6,4))
             plt.plot(self.t, self.muscle_force)
             plt.ylabel('Force [N]')
             plt.xlabel('Time [ms]')
-            plt.title('Muscle force')
+            #plt.title('Muscle force')
             
     # FUNCTION NAME: gen_muscle_force
     # FUNCTION DESCRIPTION: Generates the simulated muscle force.
@@ -251,7 +261,7 @@ class Muscle_force (object):
             self.mu_force[i]= self.sig(self.c[i],force)*self.fP*self.P[i]/tet_twitch
             self.muscle_force += self.mu_force[i]       
         
-    def analyses(self,add_rms, a_interval, add_spec, add_welch, spec_w, spec_w_size, spec_ol,
+    def analysis(self,add_rms, a_interval, add_spec, add_welch, spec_w, spec_w_size, spec_ol,
                    welch_w, welch_w_size, welch_ol, add_mu_c, mu_index):
         if self.muscle_force == []:
             print("Muscle force not found.")
@@ -266,7 +276,7 @@ class Muscle_force (object):
             force_mean = np.mean(aForce)
             if add_rms:      
                 force_sd = np.std(aForce)
-                plt.figure(figsize = (12, 5))
+                plt.figure(figsize = (6, 4))
                 self.plot_std(at, aForce, force_mean, force_sd, 'Muscle Force', 'Force [N]')
             if add_spec:
                 if (spec_w_size <= spec_ol):
@@ -279,7 +289,7 @@ class Muscle_force (object):
                     nperseg = spec_w_size, 
                     noverlap = int(spec_ol * self.sampling / 1e3)
                 )
-                plt.figure(figsize = (12, 5))
+                plt.figure(figsize = (6,4))
                 ax1=plt.subplot(111)
                 self.plot_spec(tf * 1e3 + a_interval[0], f, Sxx, ax1, 10)
             if add_welch:
@@ -289,10 +299,10 @@ class Muscle_force (object):
                 fwelch, PSDwelch = welch(aForce, self.sampling, window = welch_w, nperseg = welch_w_size,
                                         noverlap = welch_ol * self.sampling / 1e3)
                 forcefm, psdfm = self.MedFreq(fwelch, PSDwelch)
-                plt.figure(figsize = (12, 5))
+                plt.figure(figsize = (6,4))
                 self.plot_welch(fwelch, PSDwelch, forcefm, psdfm, 10, "Power [N\u00b2/Hz]")
             if add_mu_c:
-                plt.figure(figsize = (12, 5))
+                plt.figure(figsize = (6,4))
                 mu_c_force = self.mu_force[mu_index-1]
                 self.plot_mu_force_c(at, mu_c_force[a_init:a_end], mu_index)
     
@@ -305,27 +315,27 @@ class Muscle_force (object):
     def plot_std(self,at,aemg,mean,std,title,ylabel):
         plt.ylabel(ylabel)
         plt.xlabel('Time [ms]')
-        plt.title(title)
+        #plt.title(title)
         plt.plot(at,aemg,label='Force')
-        plt.annotate("Mean force = %.3f N" %(mean), xy=(0.1,0.90), 
-                     xycoords = ("axes fraction"))
-        plt.annotate("Force St. Deviation = %.5f N" %(std), xy=(0.1,0.80), 
-                     xycoords = ("axes fraction"))
+        print("Mean force = %.3f N" %(mean))
+        print("Force St. Deviation = %.5f N" %(std))
         plt.xlim(at[0],at[-1])
         
     def plot_spec(self,tf,f,Sxx,spec_axis,ylim):
         cf=plt.contourf(tf,f,Sxx, levels = 20, cmap=plt.cm.jet)
-        plt.title('Spectrogram')
+        #plt.title('Spectrogram')
         plt.ylabel("Frequency [Hz]")
         plt.xlabel("Time [ms]")
         plt.ylim(0,ylim)
         ax_in = inset_axes(spec_axis, width="5%",height="100%", loc=3, 
                            bbox_to_anchor=(1.01, 0., 1, 1),
                            bbox_transform=spec_axis.transAxes, borderpad=0)
-        plt.colorbar(cf,cax = ax_in)
+        cbar = plt.colorbar(cf,cax = ax_in)
+        cbar.ax.set_ylabel('[$N^2$]',rotation=0, va='bottom')
+        cbar.ax.yaxis.set_label_coords(0.5,1.05)
         
     def plot_welch(self,fwelch,PSDwelch,emgfm,psdfm,xlim,ylabel):
-        plt.title("Force Power Spectrum Density")
+        #plt.title("Force Power Spectrum Density")
         plt.plot(fwelch,PSDwelch)
         plt.axvline(x=emgfm,ls = '--',lw=0.5, c = 'k')
         plt.annotate("Median Freq  = %.3fHz" %emgfm, xy=(0.6,0.90), 
@@ -339,7 +349,7 @@ class Muscle_force (object):
         plt.plot(at,mu_force*1e3)
         plt.xlabel('Time [ms]')
         plt.ylabel('Force [mN]')
-        plt.title('Motor unit # {} force contribution '.format(mu_c_index))
+        plt.title('MU # {}'.format(mu_c_index))
             
     def save_config(self):
         try:

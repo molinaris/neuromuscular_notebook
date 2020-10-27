@@ -6,43 +6,51 @@ import matplotlib.pyplot  as plt
 import ipywidgets as wi
 import warnings
 import time
-warnings.filterwarnings('ignore')
 
-def config_plots(style,font_size):
-    plt.style.use(style)
+#warnings.filterwarnings('ignore')
+
+
+#figure.figsize : 8, 6
+#figure.autolayout : True
+
+def config_plots():
+    #plt.style.use(style)
     plt.rcParams.update({
-        'font.size': font_size,
-        'axes.titlesize': font_size,
-        'axes.labelsize': font_size,
-        'xtick.labelsize': font_size, # fontsize of the tick labels
-        'ytick.labelsize': font_size, # fontsize of the tick labels
-        'legend.fontsize': font_size - 4,  # legend fontsize
-        'figure.titlesize': font_size, # fontsize of the figure title
-        'figure.constrained_layout.use': True})
+      "axes.spines.top" : False,
+      "axes.spines.right" : False,
+      'font.size': 12,
+      "xtick.major.size" : 5,
+      "ytick.major.size" : 5,
+      #'axes.titlesize': font_size,
+      #'axes.labelsize': font_size,
+      #'figure.titlesize': font_size, # fontsize of the figure title
+      'xtick.labelsize': "small", # fontsize of the tick labels
+      'ytick.labelsize': "small", # fontsize of the tick labels
+      'legend.fontsize': "small"})
 
 def wi1():
         #Interface configuration
     style = {'description_width': 'initial'}
-    w10 = wi.IntSlider(min = 10, max = 200, step = 1, value = 30, description='Recruitment range (RR):')        
+    w10 = wi.IntSlider(min = 10, max = 200, step = 1, value = 30, description='$RR$:')        
     w11 = wi.IntSlider(min = 1, max = 20, step = 1, value = 3, 
-                       description='Minimum firing rate (MFR) [Hz]:')
-    w12 = wi.IntSlider(min = 10, max = 55, step = 1, value = 35, description='First peak fire rate [Hz]:')
+                       description='$MFR$ [imp/s]:')
+    w12 = wi.IntSlider(min = 10, max = 55, step = 1, value = 35, description='$PFR_1$ [imp/s]:')
     w13 = wi.IntSlider(min = -30, max = 30, step = 1, value = 20, 
-                       description='Peak firing rate difference (PFRD) [Hz]:')
+                       description='$PFRD$ [imp/s]:')
     w14 = wi.FloatSlider(min = 0.05, max = 0.991, step = 0.01, value = 0.92, 
-                         description='Last recruited MN excitation [%]:')
+                         description='$\\tilde{e}_{LR}$ [%]:')
     w15 = wi.IntSlider(min = 1, value = 101, max = 400,step = 1, 
-                       description = 'Number of Type I motor neurons (MN)')
-    w16 = wi.IntSlider(min = 1, value = 17, description = 'Number of Type IIa MN')
-    w17 = wi.IntSlider(value = 2, description = 'Number of Type IIb MN')
+                       description = '# Type I MNs')
+    w16 = wi.IntSlider(min = 1, value = 17, description = '# Type IIa MNs')
+    w17 = wi.IntSlider(value = 2, description = '# Type IIb MNs')
     w18 = wi.FloatSlider(value = 2, min = 1, max = 10, step = 0.1, 
-                         description = 'Excitatory drive - firing rate gain:')
-    w19 = wi.Checkbox(value = False, description = 'Same gain for all motor units')
+                         description = '$g_{var}(n)$')
+    w19 = wi.Checkbox(value = False, description = 'Same gain for all MNs?')
     ws1 = {'rr':w10, 'mfr':w11, 'firstPFR':w12, 'PFRD':w13, 'RRC':w14,'t1':w15, 't2a':w16, 't2b':w17, 
            'gain_factor':w18, 'gain_CTE':w19}
     ui1 = wi.HBox([wi.VBox([w15, w16, w17, w10, w13, w11, w12, w19, w18, w14])])
     for i in ui1.children[0].children:
-        i.layout = wi.Layout(width= '390px')
+        i.layout = wi.Layout(width= '260px')
         i.style = style
         i.continuous_update = False
     return ui1,ws1
@@ -51,8 +59,8 @@ def wi1():
 def wi2():
     style = {'description_width': 'initial'}
     #Interface configuration
-    w42 = wi.FloatSlider(value = 0.05, min = 0, max = 1, step = 0.05, 
-                         description='Plateau/maximum intensity [%]:')
+    w42 = wi.FloatSlider(value = 5, min = 0, max = 100, step = 0.1, 
+                         description='Plateau/peak intensity [%]:')
     w43 = wi.IntSlider(value = 0.1, min = 0, max = 3000, step = 100, description='Onset [ms]:')
     w44 = wi.IntSlider(value = 0.1, min = 0, max = 6000, step = 100, description='Plateau on [ms]:')
     w45 = wi.IntSlider(value = 6000, min = 0, max = 6000, step = 100, description='Plateau off [ms]:')
@@ -80,21 +88,21 @@ def wi2():
 
 def wi3():
     style = {'description_width': 'initial'}
-    w0= wi.FloatSlider(value = 0.38, min = 0, max = 0.6, step = 0.01, 
-                       style = style, description='CoV initial value (used for constant variation):', 
-                       layout = wi.Layout(width= '500px'))
-    w1= wi.FloatSlider(value = 0.02, min = 0.02, max = 0.4, step = 0.01, 
-                       description='CoV final value:', layout = wi.Layout(width= '500px'), style = style)
-    w2= wi.FloatSlider(value = 1.5, min = 0, max = 10, step = 0.1, 
-                       description='CoV variation factor (use zero for cte):', 
-                       layout = wi.Layout(width= '500px'), style = style)
-    w3= wi.FloatSlider(value = 0.1, min = 0, max = 0.3, step = 0.01, 
-                       description='Synchronization Level:', 
-                       layout = wi.Layout(width= '500px'), style = style)
+    w0= wi.FloatSlider(value = 30, min = 1, max = 50, step = 0.1, 
+                       style = style, description='ISI $cv$ [%]:', 
+                       layout = wi.Layout(width= '300px'))
+    #w1= wi.FloatSlider(value = 0.02, min = 0.02, max = 0.4, step = 0.01, 
+    #                   description='CoV final value:', layout = wi.Layout(width= '500px'), style = style)
+    #w2= wi.FloatSlider(value = 1.5, min = 0, max = 10, step = 0.1, 
+    #                   description='CoV exp. factor (use zero for cte):', 
+    #                   layout = wi.Layout(width= '500px'), style = style)
+    w3= wi.FloatSlider(value = 10, min = 0, max = 30, step = 1, 
+                       description='Synch. Level [%]:', 
+                       layout = wi.Layout(width= '300px'), style = style)
     w4= wi.FloatSlider(value = 1.7, min = 0, max = 5,
-                       description='Synchronism Standard Deviation [ms]:', 
-                       layout = wi.Layout(width= '500px'), style = style)
-    return [w0,w1,w2,w3,w4]
+                       description='Synch $\sigma$ [ms]:', 
+                       layout = wi.Layout(width= '300px'), style = style)
+    return [w0,w3,w4]
 
 def wi4():
     style = {'description_width': 'initial'}
@@ -105,7 +113,7 @@ def wi4():
     w63 = wi.FloatSlider(value = 0.1, min=0, max = 3, step = 0.001, style = style,
                          description = 'Skin layer [mm]')
     w64 = wi.FloatSlider( value = 0.2, min = 0, max = 5, step = 0.001, style = style, 
-                         description = 'Adipose layer [mm]')
+                         description = 'Fat layer [mm]')
     w65 = wi.Label(value = 'Cross-Section Morphology')
     w66 = wi.RadioButtons(options = ['Circle', 'Ring','Pizza','Ellipse'], value = 'Ring',
                           description = 'CSA Morphology:', style = style)
@@ -187,12 +195,12 @@ def wi8():
 
 def wi9(muscle_emg):
     style = {'description_width': 'initial'}
-    wi110 = wi.Checkbox(value = True, description = 'Add moving average', 
+    wi110 = wi.Checkbox(value = True, description = 'Add moving RMS', 
                         layout = wi.Layout(width= '400px'), 
                         continuous_update = False, style = style)
     wi111 = wi.IntSlider(value = 100, min = 1, max = 500, layout = wi.Layout(width = '400px'),
                          style = style, continuous_update = False, 
-                         description = 'Moving average window length [ms]:')
+                         description = 'Moving RMS window length [ms]:')
     wi112 = wi.Checkbox(value = True, description = 'Add Spectrogram', continuous_update = False,
                         layout = wi.Layout(width = '400px'),style = style)
     wi113 = wi.Dropdown(options = ['boxcar', 'hamming', 'hann'], value = 'hann', 
@@ -228,7 +236,7 @@ def wi9(muscle_emg):
     spectrogram_acc = wi.VBox([wi112, wi113, wi114, wi115])
     welch_acc = wi.VBox([wi116,wi117,wi118,wi119])
     acc11 = wi.Tab(children = [moving_average_acc, spectrogram_acc, welch_acc, mu_cont_acc])
-    acc11.set_title(0, 'Moving average')
+    acc11.set_title(0, 'Moving RMS')
     acc11.set_title(1, 'Spectrogram')
     acc11.set_title(2, 'Welch\'s periodogram')
     acc11.set_title(3, 'Motor unit EMG')
@@ -246,22 +254,22 @@ def wi9(muscle_emg):
 def wi10():
     style = {'description_width': 'initial'}
     w111 = wi.IntSlider(value = 130, min = 2, max = 200, step = 1, 
-                        description = 'Range of MU Twitche amplitude:',
+                        description = '$RP$:',
                         continuous_update = False)
-    w112 = wi.IntSlider(value = 3, min = 1, max = 5, step = 1, description = 'Range of Contraction Times:',
+    w112 = wi.IntSlider(value = 3, min = 1, max = 5, step = 1, description = '$RT$:',
                         continuous_update = False)
     w113 = wi.IntSlider(value = 90, min = 10, max = 200, step = 1, continuous_update = False,
-                          description = 'Maximum Contraction Time [ms]:')
-    w114 = wi.IntSlider(value = 3, min = 1, max = 50, step = 1, description = 'First MU Twitch Amplitude [mN]:',
+                          description = '$T_L$ [ms]:')
+    w114 = wi.IntSlider(value = 3, min = 1, max = 50, step = 1, description = '$P_0$ [mN]:',
                         continuous_update = False)
-    wi115 = wi.RadioButtons(options = ['Exponential', 'Random Uniform Distribution'], 
-                            description = 'Contration duration pool var.:',
+    wi115 = wi.RadioButtons(options = ['Exponential', 'Random uniform'], 
+                            description = 'Twitch duration:',
                           style = style)
-    vb111 = wi.HBox([wi.VBox([w114, w111]), wi.VBox([wi115,w113, w112])])
+    vb111 = wi.VBox([w114, w111,wi115,w113, w112])
     l11 = {'RP': w111, 'RT':w112, 'Tl': w113, 'firstP': w114, 'dur_type': wi115}
 
-    for i in (vb111.children[0].children + vb111.children[1].children):
-        i.layout = wi.Layout(width = '380px')
+    for i in vb111.children:
+        i.layout = wi.Layout(width = '300px')
         i.style = style
         i.continuous_update = False
     return vb111,l11
@@ -269,34 +277,36 @@ def wi10():
 def wi11(muscle_force):
     style = {'description_width': 'initial'}
     wit1 = wi.IntSlider(value = 50, min = 5, max = 100, 
-                        description = 'First motor unit saturation frequency [Hz]',
+                        description = 'First motor unit saturation frequency [imp/s]',
                         style = style, continuous_update = False, 
-                        layout = wi.Layout(width = '600px'))
+                        layout = wi.Layout(width = '400px'))
     wit2 = wi.IntSlider(value = 100, min = 20, max =250, 
-                        description = 'Last motor unit saturation frequency [Hz]',
+                        description = 'Last motor unit saturation frequency [imp/s]',
                         style = style, continuous_update = False, 
-                        layout = wi.Layout(width = '600px'))
+                        layout = wi.Layout(width = '400px'))
     wit3 = wi.IntSlider(value = 119, max = muscle_force.n-1, min = 0, 
                         description = 'Demonstration motor unit index',
                         style = style, continuous_update = False, 
-                        layout = wi.Layout(width = '600px'))
-    wit4 = wi.RadioButtons(options = ['Linear curve','Exponential','1o step resp.','Sigmoidal'],
-                           description = 'MU force saturation interpolation:',
-                           style = style, continuous_update = False, 
-                           layout = wi.Layout(width = '600px'))
-    ui = wi.VBox([wit4,wit1, wit2, wit3])
-    ws = {'fsatf': wit1, 'lsatf': wit2, 'i': wit3, 'sat_interp': wit4}
+                        layout = wi.Layout(width = '400px'))
+    #wit4 = wi.RadioButtons(options = ['Linear curve','Exponential','1o step resp.','Sigmoidal'],
+    #                       description = 'MU force saturation interpolation:',
+    #                       style = style, continuous_update = False, 
+    #                       layout = wi.Layout(width = '600px'))
+    #ui = wi.VBox([wit4,wit1, wit2, wit3])
+    ui = wi.VBox([wit1, wit2, wit3])
+    #ws = {'fsatf': wit1, 'lsatf': wit2, 'i': wit3, 'sat_interp': wit4}
+    ws = {'fsatf': wit1, 'lsatf': wit2, 'i': wit3}
     return ui,ws  
 
 def wi12(muscle_force):
     style = {'description_width': 'initial'}
     wi120 = wi.Checkbox(value = True, description = 'Add standard deviation', 
                         layout = wi.Layout(width = '400px'), style = style)
-    wi122 = wi.Checkbox(value = True, description = 'Add Spectrogram', 
+    wi122 = wi.Checkbox(value = True, description = 'Add spectrogram', 
                         layout = wi.Layout(width = '400px'), style = style)
     wi123 = wi.Dropdown(options = ['boxcar', 'hamming', 'hann'], value = 'hann', 
                         layout = wi.Layout(width = '400px'),
-                        style = style, description = 'Window Type:')
+                        style = style, description = 'Window type:')
     wi124 = wi.IntSlider(value = 2000, min = 2, max = 5000, step = 5, 
                          layout = wi.Layout(width = '400px'),style = style,
                          description = 'Window length [ms]:')
@@ -307,7 +317,7 @@ def wi12(muscle_force):
                         layout = wi.Layout(width = '400px'), style = style)
     wi127 = wi.Dropdown(options = ['boxcar', 'hamming', 'hann'], value = 'hann', 
                         layout = wi.Layout(width = '400px'),
-                        style = style, description = 'Window Type:')
+                        style = style, description = 'Window type:')
     wi128 = wi.IntSlider(value =2000, min = 2, max = 5000, step = 5, 
                          layout = wi.Layout(width = '400px'), style = style,
                          description = 'Window length [ms]:')
@@ -321,7 +331,7 @@ def wi12(muscle_force):
     wi1211 = wi.Checkbox(value = False, description = 'Add motor unit contribution', 
                          layout = wi.Layout(width = '400px'),style = style)
     wi1212 = wi.BoundedIntText(value = 1, min = 1, max = muscle_force.LR, step = 1, 
-                               description = 'Motor unit Index #:',
+                               description = 'Motor unit index #:',
                                style= style, layout=wi.Layout(width= '400px'))
     ws = {'add_rms': wi120, 'add_spec': wi122, 'spec_w': wi123, 'spec_w_size': wi124, 
           'spec_ol': wi125, 'add_welch': wi126, 'welch_w': wi127,
@@ -334,8 +344,8 @@ def wi12(muscle_force):
     acc12 = wi.Tab(children = [moving_average_acc2, spectrogram_acc2, welch_acc2, mu_c2])
     acc12.set_title(0, 'Standard deviation')
     acc12.set_title(1, 'Spectrogram')
-    acc12.set_title(2, 'Welch\'s Periodogram')
-    acc12.set_title(3, 'Motor Unit Force')
+    acc12.set_title(2, 'Welch\'s periodogram')
+    acc12.set_title(3, 'Motor unit force')
     ui12 = wi.VBox([wi1210, acc12])
     l211 = wi.link((ui12.children[1].children[1].children[2], 'value'),
                    (ui12.children[1].children[1].children[3], 'max'))
