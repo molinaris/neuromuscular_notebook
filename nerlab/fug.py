@@ -106,7 +106,7 @@ class Phemo(object):
         plt.ylim(self.mfr)  
         plt.xlim(0,100)
         plt.ylabel('Firing Rate [imp/s]')
-        plt.legend()
+        plt.legend(loc=2)
         
     # FUNCTION NAME: view_organization
     # FUNCTION DESCRIPTION: update and plot recruitment and firing rate

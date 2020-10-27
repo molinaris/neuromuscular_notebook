@@ -84,7 +84,7 @@ class Muscle_force (object):
         plt.plot(x,z[i]*1e3, label = 'MU #{}'.format(i+1))
         plt.xlabel('Time [ms]')
         plt.ylabel('Force [mN]')
-        plt.legend()
+        plt.legend(loc=1)
         plt.sca(ax[1])
         plt.plot(y,self.fP*self.P * 1e3)
         plt.xlabel('MU #')
@@ -200,7 +200,7 @@ class Muscle_force (object):
         plt.ylim(top = self.fP * self.P[i] *5e3)
         plt.xlim(left = 0, right = 1000)
         plt.title("MU #{}".format(i))
-        plt.legend()
+        plt.legend(loc=1)
         plt.tight_layout()
         
         spikes = np.arange(0, self.t[-1], 1e3 / self.mu_saturation[i])

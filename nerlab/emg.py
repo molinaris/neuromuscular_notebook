@@ -128,7 +128,7 @@ class Emg_mod(object):
         plt.plot(self.fa * 1000, self.fb * 1000, ls = '--', label = 'Fat tissue')
         plt.plot(self.sa*1000, self.sb*1000, label = 'Skin boundaries')
         plt.plot(self.elec*1000, marker = 7, ms = '15', label = 'Electrode')
-        plt.legend()
+        plt.legend(loc=10)
         plt.axis('equal')
         plt.xlabel('[mm]')
         plt.ylabel('[mm]')
@@ -299,7 +299,7 @@ class Emg_mod(object):
         fill_red = mpl.patches.Patch( label = 'Recruited Type II MUs', fc = (1, 0, 0, 0.4))
         blue_line = mpl.lines.Line2D([], [], color= 'b', label = 'Type I MU')
         red_line = mpl.lines.Line2D([], [], color=  'r', ls = '--', label = 'Type II MU')
-        plt.legend(handles = [fill_blue, fill_red, blue_line, red_line])
+        plt.legend(handles = [fill_blue, fill_red, blue_line, red_line],loc=3)
         for i in range(self.t1):
             if (i <= self.LR):
                 plt.fill(self.MUT[i, 0] * 1e3, self.MUT[i, 1] * 1e3, fc = (0, 0, 1, 0.4), lw = 0.5)
@@ -547,7 +547,7 @@ class Emg_mod(object):
                 
         plt.xlabel('Time [ms]')
         plt.ylabel('Amplitude [mV]')
-        plt.legend()
+        plt.legend(loc=1)
 
     # FUNCTION NAME: exp_interpol
     # FUNCTION DESCRIPTION: Creates an  growing exponential interpolation
@@ -784,7 +784,7 @@ class Emg_mod(object):
         plt.plot(at,aemg,lw=0.5,label='Raw EMG')
         plt.plot(at,moving_average,label='Moving RMS',lw=2,color='red')
         #plt.annotate("EMG RMS = %.3f mV" %(np.sqrt(np.mean(np.square(aemg)))), xy=(0.1,0.90), xycoords = ("axes fraction"))
-        plt.legend()
+        plt.legend(loc=1)
         plt.xlim(at[0],at[-1])
         
     def plot_spec(self,tf,f,Sxx,spec_axis,ylim):
