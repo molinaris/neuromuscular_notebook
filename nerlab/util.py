@@ -107,7 +107,7 @@ def wi3():
 def wi4():
     style = {'description_width': 'initial'}
     w60 = wi.FloatSlider(value = 150, min = 100, max = 1000, step = 50 , style = style,
-                         description =  'CSA [mm$^2$]')
+                         description =  'Muscle CSA [mm$^2$]')
     w61 = wi.FloatSlider(value = 0.4, min = 0.1, max = 0.80, step = 0.01, description = 'Proportion')
     w62 = wi.FloatSlider(value = 0.9, min = 0.05, max = np.pi / 2, step = 0.05, description = 'Theta [rad]')
     w63 = wi.FloatSlider(value = 0.1, min=0, max = 3, step = 0.001, style = style,
@@ -144,7 +144,7 @@ def wi5():
 
 def wi6():
     style = {'description_width': 'initial'}
-    wi800 = wi.RadioButtons(options = ['1rst order', '2nd order'], description = 'Hermite Rodrigues function:',
+    wi800 = wi.RadioButtons(options = ['1st order', '2nd order'], description = 'Hermite-Rodriguez function:',
                           style = style)
     w80 = wi.FloatSlider(value = 1, min = 0.005, max = 2, step = 0.01, description= 'First MUAP Amplitude [mV]:')
     w81 = wi.FloatSlider(value = 11.4, min = 2, max = 150, step = 1, description= 'Last MUAP Amplitude [mV]::')
