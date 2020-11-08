@@ -91,8 +91,8 @@ class Muscle_force (object):
         plt.ylabel('Twitch amp. [mN]')
         plt.sca(ax[2])
         plt.plot(self.fP*self.P * 1e3,self.T,'.')
-        plt.xlabel('Twitch amp. [mN]')
-        plt.ylabel('Twitch dur. [ms]')
+        plt.xlabel('Twitch amplitude [mN]')
+        plt.ylabel('Twitch time-to-peak. [ms]')
         plt.tight_layout()
 
     # FUNCTION NAME: sat_interpol
@@ -207,14 +207,14 @@ class Muscle_force (object):
         pre_force = self.gen_mu_force(spikes, 1, self.T[i])
         tet_max_force = max(self.sig(c_input, pre_force) * self.fP * self.P[i] / tet_twitch_ratio)
 
-        print('Motor unit Twich force {:.2f} [mN]'.format(new_twitch_amp))
-        print('Motor unit contraction time {:.2f} [ms]'.format(self.T[i]))
-        print('Motor unit tetanus force {:.2f} [mN]'.format(tet_max_force))
-        print('Motor unit tetanus force at PFR : {:.2f} [mN]'.format(pfr_max_force))
-        print('Motor unit Twitch/tetanus ratio: {:.2f} %'.format( new_twitch_amp*100/tet_max_force))
-        print('Motor unit Twitch/tetanus ratio at PFR: {:.2f} %'.format( new_twitch_amp*100/pfr_max_force))
-        print('Motor unit force saturation frequency {:.2f} [Hz]'.format(self.mu_saturation[i]))
-        print('MU pool mean and std. dev. force sat. frequency {:.2f} +- {:.2f} [Hz]'.format(
+        print('MU twitch amplitude {:.2f} [mN]'.format(new_twitch_amp))
+        print('MU twitch time-to-peak {:.2f} [ms]'.format(self.T[i]))
+        print('MU tetanic force {:.2f} [mN]'.format(tet_max_force))
+        print('MU tetanic force at PFR : {:.2f} [mN]'.format(pfr_max_force))
+        print('MU twitch/tetanus ratio: {:.2f} %'.format( new_twitch_amp*100/tet_max_force))
+        print('MU twitch/tetanus ratio at PFR: {:.2f} %'.format( new_twitch_amp*100/pfr_max_force))
+        print('MU force saturation frequency {:.2f} [Hz]'.format(self.mu_saturation[i]))
+        print('Force saturation frequency of the MU pool (mean +/- std) {:.2f} +/- {:.2f} [Hz]'.format(
             np.mean(self.mu_saturation), np.std(self.mu_saturation)))
     
     # FUNCTION NAME: newton_f
