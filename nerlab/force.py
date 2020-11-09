@@ -91,8 +91,8 @@ class Muscle_force (object):
         plt.ylabel('Twitch amp. [mN]')
         plt.sca(ax[2])
         plt.plot(self.fP*self.P * 1e3,self.T,'.')
-        plt.xlabel('Twitch amplitude [mN]')
-        plt.ylabel('Twitch time-to-peak. [ms]')
+        plt.xlabel('Twitch amp. [mN]')
+        plt.ylabel('Twitch dur. [ms]')
         plt.tight_layout()
 
     # FUNCTION NAME: sat_interpol
@@ -207,14 +207,14 @@ class Muscle_force (object):
         pre_force = self.gen_mu_force(spikes, 1, self.T[i])
         tet_max_force = max(self.sig(c_input, pre_force) * self.fP * self.P[i] / tet_twitch_ratio)
 
-        print('MU twitch amplitude {:.2f} [mN]'.format(new_twitch_amp))
-        print('MU twitch time-to-peak {:.2f} [ms]'.format(self.T[i]))
-        print('MU tetanic force {:.2f} [mN]'.format(tet_max_force))
-        print('MU tetanic force at PFR : {:.2f} [mN]'.format(pfr_max_force))
-        print('MU twitch/tetanus ratio: {:.2f} %'.format( new_twitch_amp*100/tet_max_force))
-        print('MU twitch/tetanus ratio at PFR: {:.2f} %'.format( new_twitch_amp*100/pfr_max_force))
-        print('MU force saturation frequency {:.2f} [Hz]'.format(self.mu_saturation[i]))
-        print('Force saturation frequency of the MU pool (mean +/- std) {:.2f} +/- {:.2f} [Hz]'.format(
+        print('Motor unit Twich force {:.2f} [mN]'.format(new_twitch_amp))
+        print('Motor unit contraction time {:.2f} [ms]'.format(self.T[i]))
+        print('Motor unit tetanus force {:.2f} [mN]'.format(tet_max_force))
+        print('Motor unit tetanus force at PFR : {:.2f} [mN]'.format(pfr_max_force))
+        print('Motor unit Twitch/tetanus ratio: {:.2f} %'.format( new_twitch_amp*100/tet_max_force))
+        print('Motor unit Twitch/tetanus ratio at PFR: {:.2f} %'.format( new_twitch_amp*100/pfr_max_force))
+        print('Motor unit force saturation frequency {:.2f} [Hz]'.format(self.mu_saturation[i]))
+        print('MU pool mean and std. dev. force sat. frequency {:.2f} +- {:.2f} [Hz]'.format(
             np.mean(self.mu_saturation), np.std(self.mu_saturation)))
     
     # FUNCTION NAME: newton_f
@@ -317,8 +317,8 @@ class Muscle_force (object):
         plt.xlabel('Time [ms]')
         #plt.title(title)
         plt.plot(at,aemg,label='Force')
-        print("Mean force = %.3f N" %(mean))
-        print("Force St. Deviation = %.5f N" %(std))
+        print("Mean muscle force = %.3f N" %(mean))
+        print("Force standard deviation = %.5f N" %(std))
         plt.xlim(at[0],at[-1])
         
     def plot_spec(self,tf,f,Sxx,spec_axis,ylim):
@@ -338,8 +338,7 @@ class Muscle_force (object):
         #plt.title("Force Power Spectrum Density")
         plt.plot(fwelch,PSDwelch)
         plt.axvline(x=emgfm,ls = '--',lw=0.5, c = 'k')
-        plt.annotate("Median Freq  = %.3fHz" %emgfm, xy=(0.6,0.90), 
-                     xycoords = ("axes fraction"))
+        print("PSD median frequency = %.3f Hz" %emgfm)
         plt.ylabel(ylabel)
         plt.xlabel("Frequency [Hz]")
         plt.xlim(0,xlim)
@@ -354,11 +353,11 @@ class Muscle_force (object):
     def save_config(self):
         try:
             self.config.update({
-                    'First MU Twitch Amplitude [mN]': self.fP,
-                    'Range of MU Twitches': self.RP,
-                    'Twitch duration type': self.dur_type,
-                    'Maximum Contraction Time [ms]': self.Tl,
-                    'Range of Contraction Times':self.RT,
+                    'P_1 [mN]': self.fP,
+                    'RP': self.RP,
+                    'Twitch duration': self.dur_type,
+                    'T_L [ms]': self.Tl,
+                    'RT':self.RT,
                     'First motor unit saturation frequency [Hz]': self.fsatf,
                     'Last motor unit saturation frequency [Hz]': self.lsatf,
                     'MU saturation interpol style': self.sat_interp}) 

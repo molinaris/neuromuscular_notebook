@@ -29,9 +29,7 @@ class Phemo(object):
         self.neural_input = [] #Spike train for all motor units
         self.intensity = 0 # excitatory drive intensity
         self.config = {} # Configuration 
-        self.CV_init = 0
-        self.CV_final = 0
-        self.CV_factor = 0
+        self.CV = 0
 
     # FUNCTION NAME: recruitThreshold
     # FUNCTION DESCRIPTION: Defines the recruitment threshold for each motorneuron of the pool.
@@ -361,27 +359,25 @@ class Phemo(object):
             self.config.update({'# Type I MU': self.t1,
                      '# Type IIa MU': self.t2a,
                      '# Type IIb MU': self.t2b,
-                     'Recruitment range': self.rr,
-                     'Peak firing rate difference [Hz]': self.pfrd,
-                     'Minimum fire rate [Hz]': self.mfr,
-                     'First peak fire rate [Hz]': self.firstPFR,
-                     'Same gain for all motor units':self.gain_cte,
-                     'Excitatory drive-firing rate gain [a.u.]':self.gain_factor,
-                     'Last MU recruited excitation [%]': self.rrc,
-                     'maximum intensity [%]': self.intensity,
+                     'RR': self.rr,
+                     'PFRD [Hz]': self.pfrd,
+                     'MFR [Hz]': self.mfr,
+                     'PFR_1 [Hz]': self.firstPFR,
+                     'Same gain for all MNs?':self.gain_cte,
+                     'g_1 [a.u.]':self.gain_factor,
+                     'e_LR [%]': self.rrc,
+                     'Plateau/peak intensity [%]': self.intensity,
                      'Onset [ms]': self.t00,
                      'Plateau on [ms]':self.t01,
                      'Plateau off [ms]':self.t02,
                      'Offset [ms]':self.t03,
-                     'Excitation mode':self.mode,
+                     'Modulation':self.mode,
                      'Frequency [Hz]':self.e_freq,
                      'Sampling [Hz]': self.sampling,
                      'Duration [ms]': self.sim_time,
-                     'ISI CoV initial':self.CV_init,
-                     'ISI CoV final': self.CV_final,
-                     'ISI CoV equation constant [a.u.]':self.CV_factor,
-                     'synchronization Level [%]': self.synch_level,
-                     'Synch. std. deviation [ms]': self.synch_sigma})
+                     'ISI cv':self.CV,
+                     'synch. level [%]': self.synch_level,
+                     'Synch. sigma [ms]': self.synch_sigma})
         except:
             print('Couldn\'t save motorneuron pool parameters, try to click \'run interact\' on neural command generation cell.')
         return self.config

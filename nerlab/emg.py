@@ -781,9 +781,9 @@ class Emg_mod(object):
         plt.ylabel(ylabel)
         plt.xlabel('Time [ms]')
         #plt.title(title)
-        plt.plot(at,aemg,lw=0.5,label='Raw EMG')
+        plt.plot(at,aemg,lw=0.5,label='Raw sEMG')
         plt.plot(at,moving_average,label='Moving RMS',lw=2,color='red')
-        #plt.annotate("EMG RMS = %.3f mV" %(np.sqrt(np.mean(np.square(aemg)))), xy=(0.1,0.90), xycoords = ("axes fraction"))
+        print("sEMG RMS = %.3f mV" %(np.sqrt(np.mean(np.square(aemg)))))
         plt.legend(loc=1)
         plt.xlim(at[0],at[-1])
         
@@ -804,7 +804,7 @@ class Emg_mod(object):
         #plt.title("sEMG Power Spectrum Density")
         plt.plot(fwelch,PSDwelch*10**6)
         plt.axvline(x=emgfm,ls = '--',lw=0.5, c = 'k')
-        plt.annotate("Median Freq. = %.2f Hz" %emgfm, xy=(0.5,0.9), xycoords = ("axes fraction"))
+        print("PSD median Frequency = %.2f Hz" %emgfm)
         plt.ylabel(ylabel)
         plt.xlabel("Frequency [Hz]")
         plt.xlim(0,xlim)
@@ -818,28 +818,28 @@ class Emg_mod(object):
         
     def save_config(self):
         try:
-            self.config.update({'Muscle Morphology': self.morpho, 
-                                    'Cross-Sectional Area[m^2]':  self.csa,
-                                    'Skin Layer[m]': round( self.skin,6),
-                                    'Fat Layer[m]':  self.fat,
-                                    'Proportion':  self.prop,
-                                    'Theta [rad]':  self.theta,
-                                    'Type I mean distribution':  self.t1m,
-                                    'Type I st. deviation': self.t1dp,
-                                    'Type II mean distribution':  self.t2m,
-                                    'Type II st. deviation':  self.t2dp,
-                                    'Innervation number ratio':  self.ratio,
-                                    'First MUAP Amplitude Factor [mV]': self.v1,
-                                    'Last MUAP Amplitude Factor [mV]':  self.v2,
-                                    'First MUAP Duration Factor [ms]': self.d1,
-                                    'Last MUAP Duration Factor [ms]': self.d2,
-                                    'Amplitude attenuation factor': self.ampk,
-                                    'Duration attenuation factor': self.durak,
-                                    'Add noise':  self.add_noise, 
-                                    'Noise level (Standar deviation) [mV]':  self.noise_level,
-                                    'Add filter':  self.add_filter,
-                                    'Bandpass filter low cut [Hz]':  self.lowcut,
-                                    'Bandpass filter high cut [Hz]':  self.highcut})
+            self.config.update({'CSA Morphology': self.morpho, 
+                                'CSA[m^2]':  self.csa,
+                                'Skin Layer [mm]': round( self.skin*1e3,6),
+                                'Fat Layer [mm]':  self.fat*1e3,
+                                'Proportion':  self.prop,
+                                'Theta [rad]':  self.theta,
+                                'Type I MU mu':  self.t1m,
+                                'Type I MU sigma': self.t1dp,
+                                'Type II MU mu':  self.t2m,
+                                'Type II MU sigma':  self.t2dp,
+                                'Innervation number ratio':  self.ratio,
+                                'First MUAP Amplitude [mV]': self.v1,
+                                'Last MUAP Amplitude [mV]':  self.v2,
+                                'First MUAP Duration [ms]': self.d1,
+                                'Last MUAP Duration [ms]': self.d2,
+                                'Amplitude attenuation factor': self.ampk,
+                                'widening factor': self.durak,
+                                'Add noise':  self.add_noise, 
+                                'Noise level (Standar deviation) [mV]':  self.noise_level,
+                                'Add filter':  self.add_filter,
+                                'Bandpass filter low cut [Hz]':  self.lowcut,
+                                'Bandpass filter high cut [Hz]':  self.highcut})
         except:
             print('Could not save EMG parameters. Try to click on \'run interact\' button on EMG generation cell.')
         return self.config
