@@ -1,0 +1,53 @@
+,Configuration
+# Type I MU,101
+# Type IIa MU,17
+# Type IIb MU,2
+RR,30
+PFRD [Hz],20
+MFR [Hz],3
+PFR_1 [Hz],35
+Same gain for all MNs?,False
+g_1 [a.u.],2.0
+e_LR [%],0.92
+Plateau/peak intensity [%],0.05
+Onset [ms],0
+Plateau on [ms],0
+Plateau off [ms],6000
+Offset [ms],6000
+Modulation,Trapezoidal
+Frequency [Hz],0.0005
+Sampling [Hz],20000
+Duration [ms],6000
+ISI cv,0.3
+synch. level [%],10.0
+Synch. sigma [ms],1.7
+CSA Morphology,Ring
+CSA[m^2],0.00015
+Skin Layer [mm],0.1
+Fat Layer [mm],0.2
+Proportion,0.4
+Theta [rad],0.9
+Type I MU mu,0.011550441481289725
+Type I MU sigma,0.5
+Type II MU mu,0.014085904245475275
+Type II MU sigma,0.25
+Innervation number ratio,84
+First MUAP Amplitude [mV],1.0
+Last MUAP Amplitude [mV],11.4
+First MUAP Duration [ms],3.0
+Last MUAP Duration [ms],1.4
+Amplitude attenuation factor,0.005
+widening factor,100
+Add noise,True
+Noise standard deviation [mV],0.05
+Add filter,True
+High-pass cutoff frequency [Hz],10.0
+Low-pass cutoff frequency [Hz],500.0
+P_1 [mN],0.003
+RP,130
+Twitch duration,Exponential
+T_L [ms],90
+RT,3
+First motor unit saturation frequency [Hz],50
+Last motor unit saturation frequency [Hz],100
+MU saturation interpol style,Exponential

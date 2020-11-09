@@ -783,6 +783,7 @@ class Emg_mod(object):
         #plt.title(title)
         plt.plot(at,aemg,lw=0.5,label='Raw sEMG')
         plt.plot(at,moving_average,label='Moving RMS',lw=2,color='red')
+        #plt.annotate("EMG RMS = %.3f mV" %(np.sqrt(np.mean(np.square(aemg)))), xy=(0.1,0.90), xycoords = ("axes fraction"))
         print("sEMG RMS = %.3f mV" %(np.sqrt(np.mean(np.square(aemg)))))
         plt.legend(loc=1)
         plt.xlim(at[0],at[-1])
@@ -804,6 +805,7 @@ class Emg_mod(object):
         #plt.title("sEMG Power Spectrum Density")
         plt.plot(fwelch,PSDwelch*10**6)
         plt.axvline(x=emgfm,ls = '--',lw=0.5, c = 'k')
+        #plt.annotate("Median Freq. = %.2f Hz" %emgfm, xy=(0.5,0.9), xycoords = ("axes fraction"))
         print("PSD median Frequency = %.2f Hz" %emgfm)
         plt.ylabel(ylabel)
         plt.xlabel("Frequency [Hz]")
@@ -836,10 +838,10 @@ class Emg_mod(object):
                                 'Amplitude attenuation factor': self.ampk,
                                 'widening factor': self.durak,
                                 'Add noise':  self.add_noise, 
-                                'Noise level (Standar deviation) [mV]':  self.noise_level,
+                                'Noise standard deviation [mV]':  self.noise_level,
                                 'Add filter':  self.add_filter,
-                                'Bandpass filter low cut [Hz]':  self.lowcut,
-                                'Bandpass filter high cut [Hz]':  self.highcut})
+                                'High-pass cutoff frequency [Hz]':  self.lowcut,
+                                'Low-pass cutoff frequency [Hz]':  self.highcut})
         except:
             print('Could not save EMG parameters. Try to click on \'run interact\' button on EMG generation cell.')
         return self.config

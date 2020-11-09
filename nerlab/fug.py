@@ -378,6 +378,8 @@ class Phemo(object):
                      'ISI cv':self.CV,
                      'synch. level [%]': self.synch_level,
                      'Synch. sigma [ms]': self.synch_sigma})
+
+
         except:
             print('Couldn\'t save motorneuron pool parameters, try to click \'run interact\' on neural command generation cell.')
         return self.config

@@ -33,8 +33,6 @@ After installing Anaconda, you have to create a Python 3.7 environment with the 
 - [Molinari, R.G., Elias, L.A.](Poster_SfN_2019_RGM_LAE.pdf) (2019) An interactive Python notebook as an educational tool for neuromuscular control. In: Proceedings of the 49th Annual Meeting of the Society for Neuroscience, Chicago.
 
 ## References
-1. [Bigland-Ritche et al.](http:doi.org/10.1177/107385849800400413) (1998) Contractile properties of human motor units: Is man a cat? Neuroscientist, 4(4), 240–249.
-2. [Cisi, R.R.L., Kohn, A.F](https://dx.doi.org/10.1007/s10827-008-0092-8) (2008) Simulation system of spinal cord motor nuclei and associated nerves and muscles, in a Web-based architecture. Journal of Computational Neuroscience, 25(3), 520-542.
 3. [Challis, R.E., Kitney, R.I.](https://doi.org/10.1007/BF02442601) (1990) Biomedical signal processing (in four parts) - Part 1 Time-domain methods. Medical & Biological Engineering & Computning, 28(6), 509-524.
 4. [Challis, R.E., Kitney, R.I.](https://doi.org/10.1007/BF02446704) (1991) Biomedical signal processing (in four parts) - Part Part 3 The power spectrum and coherence function. Medical & Biological Engineering & Computning, 29(3), 225-241.
 5. [Enoka, R.M., Fuglevand, A.J.](https://doi.org/10.1002/1097-4598(200101)24:1<4::AID-MUS13>3.0.CO;2-F) (2001) Motor unit physiology: Some unresolved issues. Muscle and Nerve, 24(1), 4-17.
@@ -47,5 +45,6 @@ After installing Anaconda, you have to create a Python 3.7 environment with the 
 12. [Watanabe et al.](https://doi.org/10.1152/jn.00073.2013) (2013) Influences of premotoneuronal command statistics on the scaling of motor output variability during isometric plantar flexion. Journal of Neurophysiology, 110(11), 2592–2606.
 13. [Yao, W., Fuglevand, A.J., Enoka, R.M.](https://doi.org/10.1152/jn.2000.83.1.441) (2000) Motor-unit synchronization increases EMG amplitude and decreases force steadiness of simulated contractions. Journal of Neurophysiology, 83(1), 441-452.
 14. [Zhou, P., Rymer, W.Z.]( https://doi.org/10.1152/jn.00367.2004) (2004) Factors governing the form of the relation between muscle force and the EMG: a simulation study. Journal of Neurophysiology, 92(5), 2878-2886.
+
 ## Funding
 This project was funded by [CNPq](http://www.cnpq.br/) (Brazilian NSF): proc. #409302/2016-3.
