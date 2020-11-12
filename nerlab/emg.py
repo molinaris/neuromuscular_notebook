@@ -123,16 +123,16 @@ class Emg_mod(object):
         self.csa, self.skin, self.fat = CSA*10**-6, sk*10**-3, fa*10**-3
         self.theta, self.prop, self.morpho= the, prop , morpho
         self.defineMorpho()
-        plt.figure(figsize=(6,6))
-        plt.plot(self.ma * 1000, self.mb * 1000,  ls = '-.', label = 'muscle boundaries')
-        plt.plot(self.fa * 1000, self.fb * 1000, ls = '--', label = 'adipose tissue')
-        plt.plot(self.sa*1000, self.sb*1000, label = 'skin boundaries')
-        plt.plot(self.elec*1000, marker = 7, ms = '15', label = 'electrode')
-        plt.legend()
+        plt.figure(figsize=(5,4))
+        plt.plot(self.ma * 1000, self.mb * 1000,  ls = '-.', label = 'Muscle boundaries')
+        plt.plot(self.fa * 1000, self.fb * 1000, ls = '--', label = 'Fat tissue')
+        plt.plot(self.sa*1000, self.sb*1000, label = 'Skin boundaries')
+        plt.plot(self.elec*1000, marker = 7, ms = '15', label = 'Electrode')
+        plt.legend(loc=10)
         plt.axis('equal')
         plt.xlabel('[mm]')
         plt.ylabel('[mm]')
-        plt.title('Muscle Cross-Sectional Area')
+        #plt.title('Muscle Cross-Sectional Area')
         
     # FUNCTION NAME: innervateRatio
     # FUNCTION DESCRIPTION: Calculates the number of innervated muscle fibers
@@ -286,24 +286,20 @@ class Emg_mod(object):
         hist_bins = [np.arange(min(self.ma) * 1e3, max(self.ma) * 1e3, hst_step), 
                      np.arange(min(self.mb) * 1e3, max(self.mb) *1e3, hst_step)]
         hist,xedges,yedges = np.histogram2d(self.gx * 1e3, self.gy * 1e3, bins = hist_bins)
-        f, axes = plt.subplots(1, 2, figsize=(14, 7), sharex = 'all')
-        plt.subplots_adjust(wspace = 0.1, hspace = 0.05)
+        f, axes = plt.subplots(1, 2, figsize=(8, 4), sharex = 'all')
         plt.sca(axes[0])
         plt.ylabel('[mm]')
         plt.xlabel('[mm]')
-        plt.title('Motor unit territory distribution')
-        ##incluir aqui
-        plt.annotate(
-            "MU type II radial eccentricity:{:.2f} [mm]".format(self.eccentricity*1e3),
-            xy=(0.1,0.1),
-            xycoords = ("axes fraction")
-        )
+        #plt.title('MU territories')
+        #plt.annotate("MU type II radial eccentricity:{:.2f} [mm]".format(self.eccentricity*1e3),
+        #    xy=(0.1,0.1),
+        #    xycoords = ("axes fraction"))
 
         fill_blue = mpl.patches.Patch( label = 'Recruited Type I MUs',  fc = (0, 0, 1, 0.4) )
         fill_red = mpl.patches.Patch( label = 'Recruited Type II MUs', fc = (1, 0, 0, 0.4))
         blue_line = mpl.lines.Line2D([], [], color= 'b', label = 'Type I MU')
         red_line = mpl.lines.Line2D([], [], color=  'r', ls = '--', label = 'Type II MU')
-        plt.legend(handles = [fill_blue, fill_red, blue_line, red_line])
+        plt.legend(handles = [fill_blue, fill_red, blue_line, red_line],loc=3)
         for i in range(self.t1):
             if (i <= self.LR):
                 plt.fill(self.MUT[i, 0] * 1e3, self.MUT[i, 1] * 1e3, fc = (0, 0, 1, 0.4), lw = 0.5)
@@ -322,11 +318,14 @@ class Emg_mod(object):
             im1 = plt.imshow(hist.T, extent = extent, interpolation = 'nearest', origin = 'lower', cmap=plt.cm.jet)
             axins1 = inset_axes(axes1, width = "5%", height = "100%", loc = 3, bbox_to_anchor=(1.01, 0., 1, 1),
                                 bbox_transform = axes1.transAxes, borderpad = 0)
-            plt.colorbar(im1, cax = axins1)
+            cbar = plt.colorbar(im1, cax = axins1)
             axins1.xaxis.set_ticks_position("bottom")
+            cbar.ax.set_ylabel('[a.u.]',rotation=0, va='bottom')
+            cbar.ax.yaxis.set_label_coords(0.5,1.05)
             axes1.axis('equal')
             axes1.set_xlabel('[mm]')
-            axes1.set_title('Motor unit territories (2D Histogram)')
+            #axes1.set_title('MU territories (2D Hist)')
+        plt.subplots_adjust(wspace = 0.1, hspace = 0.05)
         
     # FUNCTION NAME: ring_normal_distribution_otimize
     # FUNCTION DESCRIPTION: Generate Motor unit Territory (MUT) center coordinates for
@@ -342,7 +341,9 @@ class Emg_mod(object):
             t_temp = np.random.uniform(-self.theta,self.theta)
             x_temp = r_temp*np.sin(t_temp)
             y_temp = r_temp*np.cos(t_temp)
-            theta_c = np.arcsin(self.MUradius[i]/r_temp)
+            if self.MUradius[i]/r_temp > 1: theta_c = np.arcsin(1)
+            elif self.MUradius[i]/r_temp < -1:  theta_c = np.arcsin(-1)
+            else: theta_c = np.arcsin(self.MUradius[i]/r_temp)
             phi_c = np.arcsin(x_temp/r_temp)
             if (r_temp <= self.re-self.MUradius[i]) and (r_temp>= self.MUradius[i] + self.ri) \
                 and (phi_c <= self.theta - theta_c) and (phi_c >= -(self.theta - theta_c)):
@@ -368,7 +369,9 @@ class Emg_mod(object):
             t_temp = np.random.uniform(-self.theta,self.theta)
             x_temp = r_temp*np.sin(t_temp)
             y_temp = r_temp*np.cos(t_temp)
-            theta_c = np.arcsin(self.MUradius[i]/r_temp)
+            if self.MUradius[i]/r_temp > 1: theta_c = np.arcsin(1)
+            elif self.MUradius[i]/r_temp < -1:  theta_c = np.arcsin(-1)
+            else: theta_c = np.arcsin(self.MUradius[i]/r_temp)
             phi_c = np.arcsin(x_temp/r_temp)
             if (r_temp <= self.re-self.MUradius[i]) and (r_temp>= self.MUradius[i]+self.ri) \
                 and (phi_c <= self.theta - theta_c) and (phi_c >= -(self.theta - theta_c)):
@@ -403,7 +406,9 @@ class Emg_mod(object):
             t_temp = np.random.uniform(-self.theta,self.theta)
             x_temp = r_temp*np.sin(t_temp)
             y_temp = r_temp*np.cos(t_temp)
-            theta_c = np.arcsin(self.MUradius[i]/r_temp)
+            if self.MUradius[i]/r_temp > 1: theta_c = np.arcsin(1)
+            elif self.MUradius[i]/r_temp < -1:  theta_c = np.arcsin(-1)
+            else: theta_c = np.arcsin(self.MUradius[i]/r_temp)
             phi_c = np.arcsin(x_temp/r_temp)
             if (r_temp <= self.r-self.MUradius[i]) and (r_temp >= self.MUradius[i]) \
                 and (phi_c <= self.theta - theta_c) and (phi_c >= -(self.theta - theta_c)):
@@ -429,7 +434,9 @@ class Emg_mod(object):
             t_temp = np.random.uniform(-self.theta,self.theta)
             x_temp = r_temp*np.sin(t_temp)
             y_temp = r_temp*np.cos(t_temp)
-            theta_c = np.arcsin(self.MUradius[i]/r_temp)
+            if self.MUradius[i]/r_temp > 1: theta_c = np.arcsin(1)
+            elif self.MUradius[i]/r_temp < -1:  theta_c = np.arcsin(-1)
+            else: theta_c = np.arcsin(self.MUradius[i]/r_temp)
             phi_c = np.arcsin(x_temp/r_temp)
             if (r_temp <= self.r-self.MUradius[i]) and (r_temp>= self.MUradius[i]) \
                 and (phi_c <= self.theta - theta_c) and (phi_c >= -(self.theta - theta_c)):
@@ -528,9 +535,9 @@ class Emg_mod(object):
         y = np.arange(self.n)
         z = np.zeros((y.shape[0],x.shape[0]))
         
-        plt.figure(figsize=(9, 6))
+        plt.figure(figsize=(5,4))
         for i in range(self.n):
-            if (add_hr == '1rst order'):
+            if (add_hr == '1st order'):
                 z[i] = self.hr1_f(x, i, [max(self.lm_array) * 3])
             else:
                 z[i] = self.hr2_f(x, i, [max(self.lm_array) * 3])
@@ -540,7 +547,7 @@ class Emg_mod(object):
                 
         plt.xlabel('Time [ms]')
         plt.ylabel('Amplitude [mV]')
-        plt.legend()
+        plt.legend(loc=1)
 
     # FUNCTION NAME: exp_interpol
     # FUNCTION DESCRIPTION: Creates an  growing exponential interpolation
@@ -630,29 +637,32 @@ class Emg_mod(object):
         mu_distance2d = np.sqrt((self.elec-Gb) ** 2 + Ga ** 2)
         apvar2d = np.exp(-mu_distance2d / self.ampk)
         lmvar2d = 1 + self.durak * mu_distance2d
-        f = plt.figure(figsize = (15, 7))
-        f.subplots_adjust(wspace=0.05)
+        f = plt.figure(figsize = (9,4))
         axes1 = plt.subplot(121)
         axes1.axis('equal')
         plt.xlabel('[mm]')
         plt.ylabel('[mm]')
-        plt.title('MUAP Amplitude Attenuation')
+        
         plt.plot(self.ma * 1e3, self.mb * 1e3, self.fa * 1e3, self.fb * 1e3, self.sa * 1e3, self.sb *1e3)
         plt.plot(self.elec * 1e3, marker = 7, ms = '15')
         CS = plt.contour(Ga * 1e3, Gb * 1e3, apvar2d, 10, cmap=plt.cm.jet_r)
         ax1= plt.gca()
-        plt.colorbar(CS, ax = ax1)
+        cbar1 = plt.colorbar(CS, ax = ax1)
+        cbar1.ax.set_ylabel('Attenuation',rotation=0,va='bottom')
+        cbar1.ax.yaxis.set_label_coords(0.5,1.05)
         axes1.clabel(CS, inline = 1, fontsize = 12)
         ax2 = plt.subplot(122)
         plt.plot(self.ma * 1e3, self.mb * 1e3, self.fa * 1e3, self.fb * 1e3, self.sa * 1e3, self.sb * 1e3)
         plt.plot(self.elec * 1e3, marker = 7, ms = '15')
         CS2 = plt.contour(Ga * 1e3, Gb * 1e3, lmvar2d, 8, cmap=plt.cm.jet)
         ax2 = plt.gca()
-        plt.colorbar(CS2, ax = ax2)
+        cbar2 = plt.colorbar(CS2, ax = ax2)
+        cbar2.ax.set_ylabel('Widening',rotation=0,va='bottom')
+        cbar2.ax.yaxis.set_label_coords(0.5,1.05)
         ax2.clabel(CS2, inline = 1, fontsize = 12)
         ax2.axis('equal')
         plt.xlabel('[mm]')
-        plt.title('MUAP Widening')
+        f.subplots_adjust(wspace=0.2)
         
     # FUNCTION NAME: view_semg
     # FUNCTION DESCRIPTION: generates and plot surface emg
@@ -682,10 +692,9 @@ class Emg_mod(object):
             if add_filter:
                 self.butter_bandpass_filter()
             clear_output()
-            plt.figure(figsize = (12, 6))
+            plt.figure(figsize = (6, 4))
             plt.ylabel("Amplitude [mV]")
             plt.xlabel('Time [ms]')
-            plt.title('Surface EMG')
             plt.plot(self.t, self.emg, lw = 0.5)
             plt.xlim(0, self.t[-1])
 
@@ -723,7 +732,7 @@ class Emg_mod(object):
         mfpsdvalue = cum[-1]/2
         return f,mfpsdvalue
         
-    def analyses(self,a_interval, add_rms, add_spec, add_welch, rms_length, spec_w, spec_w_size, 
+    def analysis(self,a_interval, add_rms, add_spec, add_welch, rms_length, spec_w, spec_w_size, 
                  spec_ol, welch_w, welch_w_size, welch_ol, add_mu_cont, mu_c_index):
         self.t = self.mnpool.t
         self.sampling = self.mnpool.sampling
@@ -739,8 +748,8 @@ class Emg_mod(object):
             g_count = 0
             if add_rms:
                 rms_length = int(rms_length * self.sampling/1e3)
-                moving_average = np.convolve(abs(aemg), np.ones((rms_length,)) / rms_length, mode = 'same')
-                plt.figure(figsize = (12, 4))
+                moving_average = np.sqrt(np.convolve(np.power(aemg,2), np.ones((rms_length,)) / rms_length, mode = 'same'))
+                plt.figure(figsize = (6, 4))
                 self.plot_rms(at, aemg, moving_average, 'Surface EMG Moving Average',
                               "Amplitude [mV]")
             if add_spec:
@@ -751,7 +760,7 @@ class Emg_mod(object):
                 spec_window = get_window(spec_w, spec_w_size)
                 f,tf,Sxx = spectrogram(aemg, self.sampling, window = spec_window, 
                                        nperseg = spec_w_size, noverlap = spec_ol)
-                plt.figure(figsize = (12, 4))
+                plt.figure(figsize = (6, 4))
                 ax1 = plt.subplot(111)
                 self.plot_spec(tf * 1e3 + a_interval[0], f, Sxx, ax1, 300)
             if add_welch:
@@ -762,37 +771,42 @@ class Emg_mod(object):
                 fwelch, PSDwelch = welch(aemg * 1e-3, self.sampling, window = welch_w, 
                                          nperseg = welch_w_size, noverlap = welch_ol)
                 emgfm, psdfm = self.MedFreq(fwelch, PSDwelch)
-                plt.figure(figsize = (12, 4))
+                plt.figure(figsize = (6, 4))
                 self.plot_welch(fwelch, PSDwelch, emgfm, psdfm, 500, "Power [mV\u00b2/Hz]")
             if add_mu_cont:
-                plt.figure(figsize = (12, 4))
+                plt.figure(figsize = (6, 4))
                 self.plot_mu_cont(at, self.mu_emg[mu_c_index - 1][a_init:a_end], mu_c_index)
         
     def plot_rms(self,at,aemg,moving_average,title,ylabel):
         plt.ylabel(ylabel)
         plt.xlabel('Time [ms]')
-        plt.title(title)
-        plt.plot(at,aemg,lw=0.5,label='Raw EMG')
+        #plt.title(title)
+        plt.plot(at,aemg,lw=0.5,label='Raw sEMG')
         plt.plot(at,moving_average,label='Moving RMS',lw=2,color='red')
-        plt.annotate("EMG RMS = %.3f mV" %(np.sqrt(np.mean(np.square(aemg)))), xy=(0.1,0.90), xycoords = ("axes fraction"))
-        plt.legend()
+        #plt.annotate("EMG RMS = %.3f mV" %(np.sqrt(np.mean(np.square(aemg)))), xy=(0.1,0.90), xycoords = ("axes fraction"))
+        print("sEMG RMS = %.3f mV" %(np.sqrt(np.mean(np.square(aemg)))))
+        plt.legend(loc=1)
         plt.xlim(at[0],at[-1])
         
     def plot_spec(self,tf,f,Sxx,spec_axis,ylim):
-        cf=plt.contourf(tf,f,Sxx*10**12, levels = 20, cmap=plt.cm.jet)
-        plt.title('Spectrogram')
+        cf=plt.contourf(tf,f,Sxx, levels = 20, cmap=plt.cm.jet)
+        #plt.title('Spectrogram')
         plt.ylabel("Frequency [Hz]")
         plt.xlabel("Time [ms]")
         plt.ylim(0,ylim)
         ax_in = inset_axes(spec_axis, width="5%",height="100%", loc=3, bbox_to_anchor=(1.01, 0., 1, 1),
                             bbox_transform=spec_axis.transAxes, borderpad=0)
-        plt.colorbar(cf,cax = ax_in)
+        cbar = plt.colorbar(cf,cax = ax_in)
+        ax_in.xaxis.set_ticks_position("bottom")
+        cbar.ax.set_ylabel('[$mV^2$]',rotation=0, va='bottom')
+        cbar.ax.yaxis.set_label_coords(0.5,1.05)
         
     def plot_welch(self,fwelch,PSDwelch,emgfm,psdfm,xlim,ylabel):
-        plt.title("sEMG Power Spectrum Density")
+        #plt.title("sEMG Power Spectrum Density")
         plt.plot(fwelch,PSDwelch*10**6)
         plt.axvline(x=emgfm,ls = '--',lw=0.5, c = 'k')
-        plt.annotate("Median Freq  = %.3fHz" %emgfm, xy=(0.6,0.95), xycoords = ("axes fraction"))
+        #plt.annotate("Median Freq. = %.2f Hz" %emgfm, xy=(0.5,0.9), xycoords = ("axes fraction"))
+        print("PSD median Frequency = %.2f Hz" %emgfm)
         plt.ylabel(ylabel)
         plt.xlabel("Frequency [Hz]")
         plt.xlim(0,xlim)
@@ -802,32 +816,32 @@ class Emg_mod(object):
         plt.plot(at,mu_emg)
         plt.xlabel('Time [ms]')
         plt.ylabel('Amplitude [mV]')
-        plt.title('Motor unit # {} surface EMG contribution '.format(mu_c_index))
+        plt.title('MU # {}'.format(mu_c_index))
         
     def save_config(self):
         try:
-            self.config.update({'Muscle Morphology': self.morpho, 
-                                    'Cross-Sectional Area[m^2]':  self.csa,
-                                    'Skin Layer[m]': round( self.skin,6),
-                                    'Fat Layer[m]':  self.fat,
-                                    'Proportion':  self.prop,
-                                    'Theta [rad]':  self.theta,
-                                    'Type I mean distribution':  self.t1m,
-                                    'Type I st. deviation': self.t1dp,
-                                    'Type II mean distribution':  self.t2m,
-                                    'Type II st. deviation':  self.t2dp,
-                                    'Innervation number ratio':  self.ratio,
-                                    'First MUAP Amplitude Factor [mV]': self.v1,
-                                    'Last MUAP Amplitude Factor [mV]':  self.v2,
-                                    'First MUAP Duration Factor [ms]': self.d1,
-                                    'Last MUAP Duration Factor [ms]': self.d2,
-                                    'Amplitude attenuation factor': self.ampk,
-                                    'Duration attenuation factor': self.durak,
-                                    'Add noise':  self.add_noise, 
-                                    'Noise level (Standar deviation) [mV]':  self.noise_level,
-                                    'Add filter':  self.add_filter,
-                                    'Bandpass filter low cut [Hz]':  self.lowcut,
-                                    'Bandpass filter high cut [Hz]':  self.highcut})
+            self.config.update({'CSA Morphology': self.morpho, 
+                                'CSA[m^2]':  self.csa,
+                                'Skin Layer [mm]': round( self.skin*1e3,6),
+                                'Fat Layer [mm]':  self.fat*1e3,
+                                'Proportion':  self.prop,
+                                'Theta [rad]':  self.theta,
+                                'Type I MU mu':  self.t1m,
+                                'Type I MU sigma': self.t1dp,
+                                'Type II MU mu':  self.t2m,
+                                'Type II MU sigma':  self.t2dp,
+                                'Innervation number ratio':  self.ratio,
+                                'First MUAP Amplitude [mV]': self.v1,
+                                'Last MUAP Amplitude [mV]':  self.v2,
+                                'First MUAP Duration [ms]': self.d1,
+                                'Last MUAP Duration [ms]': self.d2,
+                                'Amplitude attenuation factor': self.ampk,
+                                'widening factor': self.durak,
+                                'Add noise':  self.add_noise, 
+                                'Noise standard deviation [mV]':  self.noise_level,
+                                'Add filter':  self.add_filter,
+                                'High-pass cutoff frequency [Hz]':  self.lowcut,
+                                'Low-pass cutoff frequency [Hz]':  self.highcut})
         except:
             print('Could not save EMG parameters. Try to click on \'run interact\' button on EMG generation cell.')
         return self.config
