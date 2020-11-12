@@ -60,7 +60,7 @@ def wi2():
     style = {'description_width': 'initial'}
     #Interface configuration
     w42 = wi.FloatSlider(value = 5, min = 0, max = 100, step = 0.1, 
-                         description='Plateau/peak intensity [%]:')
+                         description='Plateau/Peak intensity [%]:')
     w43 = wi.IntSlider(value = 0.1, min = 0, max = 3000, step = 100, description='Onset [ms]:')
     w44 = wi.IntSlider(value = 0.1, min = 0, max = 6000, step = 100, description='Plateau on [ms]:')
     w45 = wi.IntSlider(value = 6000, min = 0, max = 6000, step = 100, description='Plateau off [ms]:')
@@ -114,7 +114,6 @@ def wi4():
                          description = 'Skin layer [mm]')
     w64 = wi.FloatSlider( value = 0.2, min = 0, max = 5, step = 0.001, style = style, 
                          description = 'Fat layer [mm]')
-    w65 = wi.Label(value = 'Muscle cross section morphology')
     w66 = wi.RadioButtons(options = ['Circle', 'Ring','Pizza','Ellipse'], value = 'Ring',
                           description = 'CSA morphology:', style = style)
     ui = wi.VBox([w66, w60, w61, w62, w63, w64])
@@ -129,7 +128,7 @@ def wi4():
 def wi5():
     style = {'description_width': 'initial'}
     w71 = wi.IntSlider(value = 84, min = 10, max = 200, step = 1, description = 'Innervation number ratio',
-                       layout = wi.Layout(width = '350px'), style = style, continuous_update = False)
+                       layout = wi.Layout(width = '300px'), style = style, continuous_update = False)
     w72 = wi.FloatSlider(value = 0.7, min = 0, max = 1, step = 0.01, description = 'Type I MU $\mu$',
                          layout = wi.Layout(width = '300px'),style = style, continuous_update = False)
     w73 = wi.FloatSlider(value = 0.5, min = 0.25, max = 1, step = 0.01, description = 'Type I MU $\sigma$',
@@ -138,7 +137,7 @@ def wi5():
                          layout = wi.Layout(width= '300px'), style = style, continuous_update = False)
     w75 = wi.FloatSlider(value = 0.25, min = 0.25, max = 1, step = 0.01, description = 'Type II MU $\sigma$',
                          layout = wi.Layout(width = '300px'), style = style, continuous_update = False)
-    vb70 = wi.HBox([wi.VBox([w72, w73, w74, w75]), wi.VBox([w71])])
+    vb70 = wi.VBox([w72, w73, w74, w75,w71])
     l7= {'ratio': w71, 't1m': w72, 't1dp': w73, 't2m' : w74, 't2dp' : w75}
     return vb70, l7
 
@@ -150,12 +149,10 @@ def wi6():
     w81 = wi.FloatSlider(value = 11.4, min = 2, max = 150, step = 1, description= 'Last MUAP amplitude [mV]::')
     w82 = wi.FloatSlider(value = 3, min = 0.9, max = 5, step = 0.1, description = 'First MUAP duration [ms]:')
     w83 = wi.FloatSlider(value = 1.4, min = 0.1, max = 5, step = 0.1, description = 'Last MUAP duration [ms]:')
-    vb80 = wi.HBox([wi.VBox([w80, w81]), wi.VBox([w82, w83])])
-    vb800 = wi.VBox([wi800, vb80])
+    vb800 = wi.VBox([wi800, w80, w81,w82, w83])
     l8= {'add_hr': wi800, 'v1': w80,'v2': w81, 'd1': w82, 'd2': w83}
-    vb80.layout = wi.Layout(width = '710px')
-    vb800.layout = wi.Layout(width = '710px')
-    for i in vb80.children[0].children + vb80.children[1].children:
+    vb800.layout = wi.Layout(width = '360px')
+    for i in vb800.children:
         i.layout = wi.Layout(width= '350px')
         i.style = style
         i.continuous_update = False
@@ -169,7 +166,7 @@ def wi7():
     w91 = wi.IntSlider(value = 100, min = 0, max = 1e3, step = 100, 
                        description = 'Widening factor [mm$^{-1}$]:',style = style)
     ws7 =  {'ampk': w90,'durak': w91}
-    ui9 = wi.HBox([w90, w91])
+    ui9 = wi.VBox([w90, w91])
     for i in ui9.children:
         i.layout = wi.Layout(width = '400px')
         i.style = style
@@ -221,7 +218,7 @@ def wi9(muscle_emg):
     end = muscle_emg.t[-1]
     wi1110 = wi.FloatRangeSlider(value = [0, end], min = 0,
                                  max = end,step = 50, 
-                                 layout = wi.Layout(width = '600px'),
+                                 layout = wi.Layout(width = '500px'),
                                  continuous_update = False, style = style, 
                                  description = 'Analysis interval [ms]')
     wi1111 = wi.Checkbox(value = False, description = 'Plot MU contribution', layout = wi.Layout(width = '400px'),

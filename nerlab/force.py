@@ -207,14 +207,14 @@ class Muscle_force (object):
         pre_force = self.gen_mu_force(spikes, 1, self.T[i])
         tet_max_force = max(self.sig(c_input, pre_force) * self.fP * self.P[i] / tet_twitch_ratio)
 
-        print('MU twitch amplitude {:.2f} [mN]'.format(new_twitch_amp))
-        print('MU twitch time-to-peak {:.2f} [ms]'.format(self.T[i]))
-        print('MU tetanic force {:.2f} [mN]'.format(tet_max_force))
-        print('MU tetanic force at PFR : {:.2f} [mN]'.format(pfr_max_force))
+        print('MU twitch amplitude: {:.2f} [mN]'.format(new_twitch_amp))
+        print('MU twitch time-to-peak: {:.2f} [ms]'.format(self.T[i]))
+        print('MU tetanic force: {:.2f} [mN]'.format(tet_max_force))
+        print('MU tetanic force at PFR: {:.2f} [mN]'.format(pfr_max_force))
         print('MU twitch/tetanus ratio: {:.2f} %'.format( new_twitch_amp*100/tet_max_force))
         print('MU twitch/tetanus ratio at PFR: {:.2f} %'.format( new_twitch_amp*100/pfr_max_force))
-        print('MU force saturation frequency {:.2f} [Hz]'.format(self.mu_saturation[i]))
-        print('Force saturation frequency of the MU pool (mean +/- std) {:.2f} +/- {:.2f} [Hz]'.format(
+        print('MU force saturation frequency: {:.2f} [Hz]'.format(self.mu_saturation[i]))
+        print('Force saturation frequency of the MU pool (mean +/- std): {:.2f} +/- {:.2f} [Hz]'.format(
             np.mean(self.mu_saturation), np.std(self.mu_saturation)))
     
     # FUNCTION NAME: newton_f

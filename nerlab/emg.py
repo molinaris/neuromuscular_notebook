@@ -535,9 +535,9 @@ class Emg_mod(object):
         y = np.arange(self.n)
         z = np.zeros((y.shape[0],x.shape[0]))
         
-        plt.figure(figsize=(6,4))
+        plt.figure(figsize=(5,4))
         for i in range(self.n):
-            if (add_hr == '1rst order'):
+            if (add_hr == '1st order'):
                 z[i] = self.hr1_f(x, i, [max(self.lm_array) * 3])
             else:
                 z[i] = self.hr2_f(x, i, [max(self.lm_array) * 3])
