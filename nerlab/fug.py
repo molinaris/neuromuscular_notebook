@@ -3,33 +3,34 @@ from math import log
 import matplotlib.pyplot as plt
 from IPython.display import clear_output
 
-# Phenonomenologycal approach to model recruitment and rate coding organization of a motorneuron pool 
 class Phemo(object):
-    
+
     def __init__(self):
-        self.t1 = 101 # Number of type I motor units
-        self.t2a = 17 # Number of type IIa motor units
-        self.t2b = 2 # Number of type IIb motor units
-        self.n = self.t1 + self.t2a + self.t2b # Number of motor units in the pool
-        self.sampling = 2e4 # Sampling Frequency [Hz]
-        self.dt = 1/self.sampling # simulation step time [s]
-        self.t = np.arange(0,5e3,self.dt*1e3) # time array
-        self.rr = 30 #range of recruitment
-        self.pfrd = 20 #peak firing rate difference [Hz]
-        self.mfr = 3 #Minimum firing rate [Hz]
-        self.firstPFR = 35 # First recruited Peak firing rate [Hz]
-        self.gain_cte = False # If true, all motor unit gain (exicatory x firing rate) are equal 
+        """ Phenonomenologycal approach to model recruitment and rate coding 
+        organization of a motorneuron pool """
+        self.t1         = 101 # Number of type I motor units
+        self.t2a        = 17 # Number of type IIa motor units
+        self.t2b        = 2 # Number of type IIb motor units
+        self.n          = self.t1 + self.t2a + self.t2b # Size of MU pool
+        self.sampling   = 2e4 # Sampling Frequency [Hz]
+        self.dt         = 1/self.sampling # simulation step time [s]
+        self.t          = np.arange(0,5e3,self.dt*1e3) # time array
+        self.rr         = 30 #range of recruitment
+        self.pfrd       = 20 #peak firing rate difference [Hz]
+        self.mfr        = 3 #Minimum firing rate [Hz]
+        self.firstPFR   = 35 # First recruited Peak firing rate [Hz]
+        self.gain_cte   = False # If true, all motor unit gain (exicatory x firing rate) are equal 
         self.gain_factor= 2 # Gain factor
-        self.LR = 1 # Last recruited
-        self.rrc = 0.67 #Recruitment range condition [%]
-        self.ISI_limit = 15 # Minimum interspike interval  [ms]
+        self.LR         = 1 # Last recruited
+        self.rrc        = 0.67 #Recruitment range condition [%]
+        self.ISI_limit  = 15 # Minimum interspike interval  [ms]
         self.recruitThreshold() #Defines Recruitment threshold for all motor units
         self.peakFireRate() #Defines peak firing rate for all motor units
         self.recruitmentRangeCondition() # Defines Maximum excitatory drive and gain for all motor units
-        self.neural_input = [] #Spike train for all motor units
-        self.intensity = 0 # excitatory drive intensity
-        self.config = {} # Configuration 
-        self.CV = 0
+        self.neural_input   = [] #Spike train for all motor units
+        self.intensity      = 0 # excitatory drive intensity
+        self.config         = {} # Configuration 
+        self.CV             = 0
 
     # FUNCTION NAME: recruitThreshold
     # FUNCTION DESCRIPTION: Defines the recruitment threshold for each motorneuron of the pool.
@@ -123,21 +124,24 @@ class Phemo(object):
     #                10) gain_CTE: Flag to define all motorneuron gains equal to the last 
     #                   recruited (flag) [boolean]
     def view_organization(self,rr, mfr, firstPFR, PFRD, RRC, t1, t2a, t2b, gain_factor,gain_CTE):
-        self.t1 = t1
-        self.t2a = t2a
-        self.t2b = t2b
-        self.n = t1 + t2a + t2b
-        self.rr = rr
-        self.pfrd = PFRD
-        self.mfr = mfr
-        self.firstPFR = firstPFR
-        self.gain_cte = gain_CTE
-        self.gain_factor= gain_factor
-        self.rrc = RRC
+        self.get_mu_pool_org(rr, mfr, firstPFR, PFRD, RRC, t1, t2a, t2b, gain_factor,gain_CTE)
+        self.graph_FRxExcitation()
+
+    def get_mu_pool_org(self,rr, mfr, firstPFR, PFRD, RRC, t1, t2a, t2b, gain_factor,gain_CTE):
+        self.t1          = t1
+        self.t2a         = t2a
+        self.t2b         = t2b
+        self.n           = t1 + t2a + t2b
+        self.rr          = rr
+        self.pfrd        = PFRD
+        self.mfr         = mfr
+        self.firstPFR    = firstPFR
+        self.gain_cte    = gain_CTE
+        self.gain_factor = gain_factor
+        self.rrc         = RRC/100
         self.recruitThreshold()
         self.peakFireRate()
         self.recruitmentRangeCondition()
-        self.graph_FRxExcitation()
  
     # FUNCTION NAME: excitation
     # FUNCTION DESCRIPTION: caclulates the excitatory drive over the simulation time
@@ -188,7 +192,17 @@ class Phemo(object):
         if (mode == "Sinusoidal"):
             for i in range(self.t_size):
                 self.E[i] = intensity*Emax/2 + intensity*Emax/2*np.sin(2*np.pi*f*self.t[i])
-       
+    
+    def set_excitatory(self,intensity, t0, t1, t2, t3, freq_sin, sample_time, sim_time,mode):
+        self.sampling = sample_time
+        self.sim_time = sim_time
+        self.dt = 1e3/sample_time
+        self.t = np.arange(0, self.sim_time, self.dt) #Time Array in [ms]
+        self.t_size = len(self.t)
+        self.E = np.zeros(self.t_size)
+        self.excitation_curve(t0,t1,t2,t3,freq_sin*1e-3,mode,intensity/100)
+
+
     def view_excitatory(self,intensity, t0, t1, t2, t3, freq_sin, sample_time, sim_time,mode):
         """    # FUNCTION NAME: view_excitatory
         # FUNCTION DESCRIPTION: caculates and plot the excitatory drive over the simulation time
@@ -204,13 +218,7 @@ class Phemo(object):
         #                6) mode: Excitatory drive mode, 'Trapezoidal' or 'Sinusoidal' 
         #                   excitation curve [string]  
         """
-        self.sampling = sample_time
-        self.sim_time = sim_time
-        self.dt = 1e3/sample_time
-        self.t = np.arange(0, self.sim_time, self.dt) #Time Array in [ms]
-        self.t_size = len(self.t)
-        self.E = np.zeros(self.t_size)
-        self.excitation_curve(t0,t1,t2,t3,freq_sin*1e-3,mode,intensity/100)
+        self.set_excitatory(intensity, t0, t1, t2, t3, freq_sin, sample_time, sim_time,mode)
         plt.figure(figsize=(4,4))
         plt.plot(self.t, self.E/self.Emax * 100)
         plt.xlabel('Time [ms]')
@@ -300,6 +308,17 @@ class Phemo(object):
                             self.neural_input[k][min_index] = adjusted_spike_time
                             synched_MUs += 1
     
+    def get_neural_command(self, CoV , synch_level, sigma):
+        print("Processing...")
+        self.CV = CoV
+        self.synch_level = synch_level
+        self.synch_sigma = sigma
+        self.fireRate(self.E) #Defines the mean firing rate
+        self.CV = CoV/100
+        self.fr = self.fireRate(self.E)
+        self.neuralInput() #Generates the neural input to the muscles
+        self.synchSpikes(synch_level/100, sigma) #Promotes synchronism between MU
+
     # FUNCTION NAME: view_neural_command
     # FUNCTION DESCRIPTION: Plot neural command and other performance indicators
     # INPUT PARAMS:  1) CoV: Initial cv to be used in the interpolation (if cv_factor = 0, this value
@@ -308,46 +327,38 @@ class Phemo(object):
     #                3) sigma: standard deviation of the normal distribution add to the 
     #                   synchronized discharge (ms) [float]
     def view_neural_command(self, CoV , synch_level, sigma):
-            print("Processing...")
-            self.CV = CoV
-            self.synch_level = synch_level
-            self.synch_sigma = sigma
-            self.fireRate(self.E) #Defines the mean firing rate
-            self.CV = CoV/100
-            self.fr = self.fireRate(self.E)
-            self.neuralInput() #Generates the neural input to the muscles
-            self.synchSpikes(synch_level/100, sigma) #Promotes synchronism between MU
-            #Inter Spike interval Analysis
-            ISI = [np.diff(mu_isi) for mu_isi in self.neural_input if mu_isi != []]
-            isi_hist = [item for mu_isi in ISI for item in mu_isi]
-            isi_mean = [np.mean(mu_isi) for mu_isi in ISI]
-            isi_std = [np.std(mu_isi) for mu_isi in ISI]
-            isi_cv = [mu_isi_std / mu_isi_mean for mu_isi_std, mu_isi_mean in zip(isi_std, isi_mean)]
-            clear_output()
-            f, axes = plt.subplots(4, 1, figsize=(8,8))
-            axes[0] = plt.subplot2grid((4, 1), (0, 0), rowspan=2)
-            axes[1] = plt.subplot2grid((4, 1), (2, 0))
-            axes[2] = plt.subplot2grid((4, 1), (3, 0))
-            axes[0].eventplot(self.neural_input)
-            plt.sca(axes[0])
-            plt.ylabel("MU #")
-            plt.xlabel('Time (ms)')
-            plt.xlim(0, self.t[-1])
-            plt.ylim(0, self.LR+1)
-            plt.sca(axes[1])
-            plt.hist(isi_hist, bins = np.arange(0, 500, 10), edgecolor = 'k')
-            plt.annotate("ISI mean: {:.2f}".format(np.mean(isi_mean)), xy=(0.7,0.9), xycoords = ("axes fraction"))
-            plt.annotate("ISI Std. Dev.: {:.2f}".format(np.mean(isi_std)), xy=(0.7,0.77), xycoords = ("axes fraction"))
-            plt.annotate("ISI Coef. Var.: {:.2f}".format(np.mean(isi_cv)), xy=(0.7,0.64), xycoords = ("axes fraction"))    
-            plt.ylabel('Count')
-            plt.xlabel('Interspike Interval (ms)')
-            plt.sca(axes[2])
-            plt.plot(np.asarray(isi_cv)*100, '.',marker = 'o')
-            plt.ylabel('ISI CoV [%]')
-            plt.xlabel('MN index')
-            plt.tight_layout()
-            f.subplots_adjust(hspace=0.40)
-            f.align_ylabels()
+        print("Processing...")
+        self.get_neural_command( CoV , synch_level, sigma)
+        #Inter Spike interval Analysis
+        ISI = [np.diff(mu_isi) for mu_isi in self.neural_input if mu_isi != []]
+        isi_hist = [item for mu_isi in ISI for item in mu_isi]
+        isi_mean = [np.mean(mu_isi) for mu_isi in ISI]
+        isi_std = [np.std(mu_isi) for mu_isi in ISI]
+        isi_cv = [mu_isi_std / mu_isi_mean for mu_isi_std, mu_isi_mean in zip(isi_std, isi_mean)]
+        clear_output()
+        f, axes = plt.subplots(4, 1, figsize=(8,8))
+        axes[0] = plt.subplot2grid((4, 1), (0, 0), rowspan=2)
+        axes[1] = plt.subplot2grid((4, 1), (2, 0))
+        axes[2] = plt.subplot2grid((4, 1), (3, 0))
+        axes[0].eventplot(self.neural_input)
+        plt.sca(axes[0])
+        plt.ylabel("MU #")
+        plt.xlabel('Time (ms)')
+        plt.xlim(0, self.t[-1])
+        plt.ylim(0, self.LR+1)
+        plt.sca(axes[1])
+        plt.hist(isi_hist, bins = np.arange(0, 500, 10), edgecolor = 'k')
+        print("ISI mean: {:.2f}".format(np.mean(isi_mean)))
+        print("ISI Std. Dev.: {:.2f}".format(np.mean(isi_std)))
+        print("ISI Coef. Var.: {:.2f}".format(np.mean(isi_cv)))    
+        plt.ylabel('Count')
+        plt.xlabel('Interspike Interval (ms)')
+        plt.sca(axes[2])
+        plt.plot(np.asarray(isi_cv)*100, '.',marker = 'o')
+        plt.ylabel('ISI CoV [%]')
+        plt.xlabel('MN index')
+        plt.tight_layout()
+        f.align_ylabels()
 
 
 
@@ -372,7 +383,7 @@ class Phemo(object):
                      'Plateau off [ms]':self.t02,
                      'Offset [ms]':self.t03,
                      'Modulation':self.mode,
-                     'Frequency [Hz]':self.e_freq,
+                     'Frequency [Hz]':self.e_freq*1e3,
                      'Sampling [Hz]': self.sampling,
                      'Duration [ms]': self.sim_time,
                      'ISI cv':self.CV,
