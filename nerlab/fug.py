@@ -354,7 +354,7 @@ class Phemo(object):
         plt.ylabel('Count')
         plt.xlabel('Interspike Interval (ms)')
         plt.sca(axes[2])
-        plt.plot(np.asarray(isi_cv)*100, '.',marker = 'o')
+        plt.plot(np.asarray(isi_cv)*100, ls='',marker = 'o')
         plt.ylabel('ISI CoV [%]')
         plt.xlabel('MN index')
         plt.tight_layout()
